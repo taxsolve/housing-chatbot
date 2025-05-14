@@ -23,12 +23,16 @@ if user_input:
     st.session_state.chat_log.append({"role": "user", "content": user_input})
     try:
         with st.spinner("답변 생성 중입니다..."):
-            response = openai.ChatCompletion.create(
+            client = openai.OpenAI()
+
+            response = client.chat.completions.create(
                 model="gpt-4",
                 messages=st.session_state.chat_log,
                 temperature=0.3,
             )
-            reply = response.choices[0].message["content"]
+
+            reply = response.choices[0].message.content
+
             st.session_state.chat_log.append({"role": "assistant", "content": reply})
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
